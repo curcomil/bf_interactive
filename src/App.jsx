@@ -6,7 +6,7 @@ function App() {
   return (
     <div
       className="min-h-screen bg-cover bg-center"
-      style={{ backgroundImage: "url('../../public/fondo.png')" }}
+      style={{ backgroundImage: "url('/fondo.png')" }}
     >
       <BrowserRouter>
         <Routes>

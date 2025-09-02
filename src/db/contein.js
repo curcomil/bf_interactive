@@ -1,5 +1,5 @@
 const contein = [
-  { name: "escudo1", src: "../../public/escudo_1.png", id: 4821 },
+  { name: "escudo1", src: "/escudo_1.png", id: 4821 },
   { name: "escudo2", src: "/ruta/escudo2.png", id: 7392 },
   { name: "escudo3", src: "/ruta/escudo3.png", id: 1598 },
   { name: "escudo4", src: "/ruta/escudo4.png", id: 6047 },
