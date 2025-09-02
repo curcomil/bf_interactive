@@ -2,6 +2,7 @@ import { Card } from "../../Components/Card";
 import contein from "../../db/contein";
 import duplicateAndShuffle from "../../Utils/Funtions";
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 
 function Home() {
   const [onPlay, setOnPlay] = useState(0);
@@ -33,9 +34,15 @@ function Home() {
     }
   }, [onPlay, selX, selY]);
 
+  useEffect(() => {
+    if (matched.length === contein.length) {
+      Swal.fire("SweetAlert2 is working!");
+    }
+  }, [matched]);
+
   return (
-    <div className="bg-amber-950 min-h-screen text-white flex">
-      <div className="basis-3/4 grid grid-cols-6 grid-rows-3 place-content-center place-items-center border">
+    <div className=" min-h-screen text-white flex">
+      <div className="basis-3/4 grid grid-cols-6 grid-rows-3 place-content-center place-items-center border p-3">
         {data.map((card) => (
           <Card
             key={card.uid}
@@ -49,6 +56,7 @@ function Home() {
             setSelY={setSelY}
             title={card.name}
             matched={matched}
+            src={card.src}
           />
         ))}
       </div>
