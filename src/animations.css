@@ -96,6 +96,71 @@
   }
 }
 
+@keyframes kenburns-top {
+  0% {
+    transform: scale(1) translateY(0);
+    transform-origin: 50% 16%;
+  }
+  50% {
+    transform: scale(1.25) translateY(-15px);
+    transform-origin: top;
+  }
+  50% {
+    transform: scale(1.25) translateY(-15px);
+    transform-origin: 50% 16%;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    transform-origin: top;
+  }
+}
+
+@keyframes simple_shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70% {
+    transform: translateX(-10px);
+  }
+  20%,
+  40%,
+  60% {
+    transform: translateX(10px);
+  }
+  80% {
+    transform: translateX(8px);
+  }
+  90% {
+    transform: translateX(-8px);
+  }
+}
+
+@keyframes scaleIN {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(120);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleOUT {
+  0% {
+    transform: scale(120);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 1;
+  }
+}
+
 .roll-out-right {
   animation: roll-out-right 2s ease forwards;
 }
@@ -116,4 +181,20 @@
 
 .shake-horizontal {
   animation: shake-horizontal 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) both;
+}
+
+.kenburns-top {
+  animation: kenburns-top 90s infinite ease-out forwards;
+}
+
+.simple_shake {
+  animation: simple_shake 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) both;
+}
+
+.scaleIN {
+  animation: scaleIN 1.5s ease forwards infinite;
+}
+
+.scaleOUT {
+  animation: scaleOUT 1.5s ease forwards infinite;
 }

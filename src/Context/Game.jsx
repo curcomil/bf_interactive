@@ -1,0 +1,87 @@
+import { Card } from "../Components/Card";
+import contein from "../db/contein";
+import duplicateAndShuffle from "../Utils/Funtions";
+import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
+
+function Game() {
+  const [onPlay, setOnPlay] = useState(0);
+  const [selX, setSelX] = useState(null);
+  const [selY, setSelY] = useState(null);
+  const [data, setData] = useState([]);
+  const [matched, setMatched] = useState([]);
+  const [transition, setTransition] = useState(false);
+
+  useEffect(() => {
+    setData(duplicateAndShuffle(contein));
+    setTransition(true);
+    setTimeout(() => {
+      setTransition(false);
+    }, 1500);
+  }, []);
+
+  useEffect(() => {
+    if (onPlay === 2 && selX && selY) {
+      const sameCard = selX.uid === selY.uid;
+      const match = selX.id === selY.id && !sameCard;
+
+      if (match) {
+        console.log("Las cartas coinciden");
+        setMatched((prev) => [...prev, selX.id]);
+      }
+      if (!match) console.log("Las cartas no coinciden");
+
+      setTimeout(() => {
+        setSelX(null);
+        setSelY(null);
+        setOnPlay(0);
+      }, 400);
+    }
+  }, [onPlay, selX, selY]);
+
+  useEffect(() => {
+    if (matched.length === contein.length) {
+      Swal.fire("SweetAlert2 is working!");
+    }
+  }, [matched]);
+
+  return (
+    <div>
+      {transition ? (
+        <div className="min-h-screen flex justify-center items-center overflow-hidden">
+          <div className="w-[1vw] h-[1vw] bg-[#7b704c] rounded-full z-20 scaleOUT"></div>
+        </div>
+      ) : (
+        <div className="min-h-screen text-white flex">
+          <div className="basis-3/4 grid grid-cols-6 grid-rows-3 place-content-center place-items-center border p-3">
+            {data.map((card) => (
+              <Card
+                key={card.uid}
+                id={card.id}
+                uid={card.uid}
+                onPlay={onPlay}
+                setOnPlay={setOnPlay}
+                selX={selX}
+                setSelX={setSelX}
+                selY={selY}
+                setSelY={setSelY}
+                title={card.name}
+                matched={matched}
+                src={card.src}
+              />
+            ))}
+          </div>
+          <div className="flex basis-1/4 flex-col border">
+            <p>En juego: {onPlay}</p>
+            <p>Card X: {selX?.id ?? "Not yet"}</p>
+            <p>Card Y: {selY?.id ?? "Not yet"}</p>
+            {matched.length > 0 &&
+              matched.map((id) => <p key={id}>Matched: {id}</p>)}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default Game;
