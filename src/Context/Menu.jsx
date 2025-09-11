@@ -4,7 +4,6 @@ import { AppContext } from "./Context";
 function Menu() {
   const [shake, setShake] = useState(false);
   const { setContext } = useContext(AppContext);
-  const [transition, setTransition] = useState(false);
 
   useEffect(() => {
     let timeout;
@@ -22,12 +21,6 @@ function Menu() {
   }, []);
 
   const shake_state = shake ? "simple_shake" : "";
-  const startGame = () => {
-    setTransition(true);
-    setTimeout(() => {
-      setContext("game");
-    }, 1500);
-  };
 
   return (
     <div className="relative min-h-screen text-white flex items-center justify-center normal-text overflow-hidden">
@@ -43,24 +36,18 @@ function Menu() {
         <p className="text-[2.5vw] text-[#8e5f4a]">
           Entre lo personal, lo militar y lo sagrado
         </p>
-        {transition ? (
-          <div
-            className={`w-[1vw] h-[1vw] bg-[#7b704c] rounded-full z-20 scaleIN`}
-          ></div>
-        ) : (
-          <div
-            className={`w-[1vw] h-[1vw] bg-transparent rounded-full z-20`}
-          ></div>
-        )}
 
         <div className="flex text-[1.5vw] mt-6">
           <button
             className={`p-2 w-[12vw] mr-9 rounded-xl bg-[#7b704c] ${shake_state}`}
-            onClick={startGame}
+            onClick={() => setContext("game")}
           >
             Jugar
           </button>
-          <button className="p-2  w-[12vw] rounded-xl bg-[#e0bc86]">
+          <button
+            className="p-2  w-[12vw] rounded-xl bg-[#e0bc86]"
+            onClick={() => setContext("presentacion")}
+          >
             Presentación
           </button>
         </div>
