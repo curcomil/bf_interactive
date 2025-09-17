@@ -1,8 +1,21 @@
 import contein from "../db/contein";
-import { useState } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
+import { AppContext } from "./Context";
 
 function Presentacion() {
   const [number, setNumber] = useState(0);
+  const { setContext } = useContext(AppContext);
+  const timerRef = useRef(null);
+
+  function resetTimer() {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+
+    timerRef.current = setTimeout(() => {
+      setIndex("increase");
+    }, 45000);
+  }
 
   function setIndex(action) {
     if (action === "increase") {
@@ -10,7 +23,18 @@ function Presentacion() {
     } else if (action === "decrease") {
       setNumber((prev) => (prev - 1 + contein.length) % contein.length);
     }
+    resetTimer();
   }
+
+  useEffect(() => {
+    resetTimer();
+
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, []);
 
   const selection = contein[number];
 
@@ -24,26 +48,40 @@ function Presentacion() {
         />
       </div>
 
-      <div className="border-2 flex flex-col items-center justify-center">
-        <p className="title text-[5vw]">{selection.name}</p>
-        <div className="p-3 bg-amber-200 max-w-[25vw]">
+      <div className="flex flex-col items-center justify-center">
+        <p className="title text-[5vw] text-center">{selection.name}</p>
+        <div className="p-10 mt-3 bg-gray-300 rounded-xl w-full text-5xl text-black/80">
           <p>
             {selection.description ??
               "Lorem ipsum dolor sit amet, consectetur adipisicing elit."}
           </p>
         </div>
-        <div className="flex gap-4 mt-4">
+        <div className="flex gap-15 mt-6 text-9xl">
           <button
-            className="px-4 py-2 bg-gray-300 rounded"
+            className="px-4 py-2 aspect-square w-[8vw] bg-gray-300 rounded"
             onClick={() => setIndex("decrease")}
           >
-            ⬅ Izquierda
+            <img src="/left-arrow.png" alt="" className="opacity-80" />
           </button>
           <button
-            className="px-4 py-2 bg-gray-300 rounded"
+            className="px-4 py-2 aspect-square w-[8vw] bg-gray-300 rounded"
             onClick={() => setIndex("increase")}
           >
-            Derecha ➡
+            <img src="/right-arrow.png" alt="" className="opacity-80" />
+          </button>
+        </div>
+        <div className="flex flex-col w-full items-end mt-15  gap-8">
+          <button
+            onClick={() => setContext("game")}
+            className="bg-gray-300 w-1/4 h-[3vw] rounded-bl-full rounded-tl-full text-6xl text-black/80 p-3 title"
+          >
+            Jugar
+          </button>
+          <button
+            onClick={() => setContext("menu")}
+            className="bg-gray-300 w-1/4 h-[3vw] rounded-bl-full rounded-tl-full text-6xl text-black/80 p-3 title"
+          >
+            Menú
           </button>
         </div>
       </div>

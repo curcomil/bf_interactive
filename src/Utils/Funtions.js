@@ -1,5 +1,9 @@
 export default function duplicateAndShuffle(array) {
-  const duplicated = array.flatMap((item) => [
+  const shuffled = [...array].sort(() => Math.random() - 0.5);
+
+  const selected = shuffled.slice(0, 9);
+
+  const duplicated = selected.flatMap((item) => [
     { ...item, uid: `${item.id}-a` },
     { ...item, uid: `${item.id}-b` },
   ]);
@@ -8,5 +12,6 @@ export default function duplicateAndShuffle(array) {
     const j = Math.floor(Math.random() * (i + 1));
     [duplicated[i], duplicated[j]] = [duplicated[j], duplicated[i]];
   }
+
   return duplicated;
 }

@@ -1,8 +1,9 @@
 import { Card } from "../Components/Card";
 import contein from "../db/contein";
 import duplicateAndShuffle from "../Utils/Funtions";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Swal from "sweetalert2";
+import { AppContext } from "./Context";
 
 function Game() {
   const [onPlay, setOnPlay] = useState(0);
@@ -10,9 +11,18 @@ function Game() {
   const [selY, setSelY] = useState(null);
   const [data, setData] = useState([]);
   const [matched, setMatched] = useState([]);
+  const { setContext } = useContext(AppContext);
+
+  const restartGame = () => {
+    setOnPlay(0);
+    setSelX(null);
+    setSelY(null);
+    setMatched([]);
+    setData(duplicateAndShuffle([...contein]));
+  };
 
   useEffect(() => {
-    setData(duplicateAndShuffle(contein));
+    restartGame();
   }, []);
 
   useEffect(() => {
@@ -35,8 +45,26 @@ function Game() {
   }, [onPlay, selX, selY]);
 
   useEffect(() => {
-    if (matched.length === contein.length) {
-      Swal.fire("SweetAlert2 is working!");
+    if (matched.length === 9) {
+      Swal.fire({
+        title: "¡Felicidades!",
+        timerProgressBar: true,
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        icon: "success",
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: "Volver a jugar",
+        denyButtonText: `Menú`,
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          setContext("presentacion")
+          setContext("game")
+        } else if (result.isDenied) {
+          setContext("menu");
+        }
+      });
     }
   }, [matched]);
 
