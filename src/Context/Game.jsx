@@ -59,8 +59,7 @@ function Game() {
       }).then((result) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
-          setContext("presentacion")
-          setContext("game")
+          restartGame();
         } else if (result.isDenied) {
           setContext("menu");
         }

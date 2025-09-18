@@ -48,41 +48,43 @@ function Presentacion() {
         />
       </div>
 
-      <div className="flex flex-col items-center justify-center">
-        <p className="title text-[5vw] text-center">{selection.name}</p>
-        <div className="p-10 mt-3 bg-gray-300 rounded-xl w-full text-5xl text-black/80">
+      <div className="flex flex-col items-center justify-between h-full">
+        <p className="title text-[4vw] text-center">{selection.name}</p>
+        <div className="p-10 mt-3 bg-gray-300 rounded-xl w-full text-3xl text-black/80">
           <p>
             {selection.description ??
               "Lorem ipsum dolor sit amet, consectetur adipisicing elit."}
           </p>
         </div>
-        <div className="flex gap-15 mt-6 text-9xl">
-          <button
-            className="px-4 py-2 aspect-square w-[8vw] bg-gray-300 rounded"
-            onClick={() => setIndex("decrease")}
-          >
-            <img src="/left-arrow.png" alt="" className="opacity-80" />
-          </button>
-          <button
-            className="px-4 py-2 aspect-square w-[8vw] bg-gray-300 rounded"
-            onClick={() => setIndex("increase")}
-          >
-            <img src="/right-arrow.png" alt="" className="opacity-80" />
-          </button>
-        </div>
-        <div className="flex flex-col w-full items-end mt-15  gap-8">
-          <button
-            onClick={() => setContext("game")}
-            className="bg-gray-300 w-1/4 h-[3vw] rounded-bl-full rounded-tl-full text-6xl text-black/80 p-3 title"
-          >
-            Jugar
-          </button>
-          <button
-            onClick={() => setContext("menu")}
-            className="bg-gray-300 w-1/4 h-[3vw] rounded-bl-full rounded-tl-full text-6xl text-black/80 p-3 title"
-          >
-            Menú
-          </button>
+        <div className="w-full">
+          <div className="flex gap-15 mt-6 justify-center">
+            <button
+              className="px-4 py-2 aspect-square w-[8vw] bg-gray-300 rounded"
+              onClick={() => setIndex("decrease")}
+            >
+              <img src="/left-arrow.png" alt="" className="opacity-80" />
+            </button>
+            <button
+              className="px-4 py-2 aspect-square w-[8vw] bg-gray-300 rounded"
+              onClick={() => setIndex("increase")}
+            >
+              <img src="/right-arrow.png" alt="" className="opacity-80" />
+            </button>
+          </div>
+          <div className="flex flex-col w-full items-end mt-15 text-4xl gap-8">
+            <button
+              onClick={() => setContext("game")}
+              className="bg-gray-300 w-1/4 h-[3vw] rounded-bl-full rounded-tl-full text-black/80 p-3 title"
+            >
+              Jugar
+            </button>
+            <button
+              onClick={() => setContext("menu")}
+              className="bg-gray-300 w-1/4 h-[3vw] rounded-bl-full rounded-tl-full text-black/80 p-3 title"
+            >
+              Menú
+            </button>
+          </div>
         </div>
       </div>
     </div>
