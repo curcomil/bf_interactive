@@ -4,6 +4,7 @@ import duplicateAndShuffle from "../Utils/Funtions";
 import { useState, useEffect, useContext } from "react";
 import Swal from "sweetalert2";
 import { AppContext } from "./Context";
+import { p } from "framer-motion/client";
 
 function Game() {
   const [onPlay, setOnPlay] = useState(0);
@@ -12,9 +13,10 @@ function Game() {
   const [data, setData] = useState([]);
   const [matched, setMatched] = useState([]);
   const [gameKey, setGameKey] = useState(0);
-  const [timer, setTimer] = useState(90); // 2 minutos en segundos
+  const [timer, setTimer] = useState(90); // 1.5 minutos en segundos
   const [gameStarted, setGameStarted] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
+  const [lastActivity, setLastActivity] = useState(Date.now());
   const { setContext } = useContext(AppContext);
 
   const restartGame = () => {
@@ -23,9 +25,10 @@ function Game() {
     setSelX(null);
     setSelY(null);
     setMatched([]);
-    setTimer(90); // Resetear timer a 2 minutos
+    setTimer(90); // Resetear timer
     setGameStarted(false);
     setGameEnded(false);
+    setLastActivity(Date.now());
 
     // Generar nuevos datos
     const newData = duplicateAndShuffle([...contein]);
@@ -48,6 +51,64 @@ function Game() {
   useEffect(() => {
     restartGame();
   }, []);
+
+  // Efecto para manejar la inactividad del usuario
+  useEffect(() => {
+    const handleUserActivity = () => {
+      setLastActivity(Date.now());
+    };
+
+    // Eventos que consideramos como actividad del usuario
+    const events = [
+      "mousedown",
+      "mousemove",
+      "keypress",
+      "scroll",
+      "touchstart",
+      "click",
+    ];
+
+    // Agregar listeners
+    events.forEach((event) => {
+      document.addEventListener(event, handleUserActivity, true);
+    });
+
+    // Cleanup
+    return () => {
+      events.forEach((event) => {
+        document.removeEventListener(event, handleUserActivity, true);
+      });
+    };
+  }, []);
+
+  // Efecto para verificar inactividad cada segundo
+  useEffect(() => {
+    const inactivityCheck = setInterval(() => {
+      const now = Date.now();
+      const inactiveTime = now - lastActivity;
+      const twoMinutesInMs = 2 * 60 * 1000; // 2 minutos en millisegundos
+
+      if (inactiveTime >= twoMinutesInMs && !gameEnded) {
+        console.log("⚠️ Usuario inactivo por 2 minutos, regresando al menú...");
+        clearInterval(inactivityCheck);
+
+        Swal.fire({
+          title: "Inactividad detectada",
+          text: "Has estado inactivo por 2 minutos. Regresando al menú principal.",
+          icon: "info",
+          timer: 3000,
+          timerProgressBar: true,
+          allowEscapeKey: false,
+          allowOutsideClick: false,
+          showConfirmButton: false,
+        }).then(() => {
+          setContext("menu");
+        });
+      }
+    }, 1000);
+
+    return () => clearInterval(inactivityCheck);
+  }, [lastActivity, gameEnded, setContext]);
 
   // Efecto para el temporizador
   useEffect(() => {
@@ -92,6 +153,9 @@ function Game() {
 
   useEffect(() => {
     if (onPlay === 2 && selX && selY && !gameEnded) {
+      // Registrar actividad cuando el usuario juega
+      setLastActivity(Date.now());
+
       const sameCard = selX.uid === selY.uid;
       const match = selX.id === selY.id && !sameCard;
 
@@ -114,7 +178,7 @@ function Game() {
       setGameEnded(true);
       Swal.fire({
         title: "¡Felicidades!",
-        text: `¡Completaste el juego en ${formatTime(120 - timer)}!`,
+        text: `¡Completaste el juego en ${formatTime(90 - timer)}!`,
         timerProgressBar: true,
         allowEscapeKey: false,
         allowOutsideClick: false,
@@ -150,10 +214,10 @@ function Game() {
   }, [data]);
 
   return (
-    <div className="min-h-screen text-white flex">
+    <div className="min-h-screen text-white flex normal-text">
       <div
         key={gameKey}
-        className="basis-3/4 grid grid-cols-6 grid-rows-3 place-content-center place-items-center border p-3"
+        className="basis-3/4 grid grid-cols-6 grid-rows-3 place-content-center place-items-center p-3"
       >
         {data.map((card) => (
           <Card
@@ -172,67 +236,77 @@ function Game() {
           />
         ))}
       </div>
-      <div className="flex basis-1/4 flex-col border p-4 space-y-4">
-        {/* Temporizador destacado */}
-        <div className="bg-gradient-to-r from-red-600 to-orange-600 p-4 rounded-lg text-center">
-          <h3 className="text-lg font-bold mb-2">⏱️ Tiempo Restante</h3>
-          <div
-            className={`text-3xl font-mono font-bold ${
-              timer <= 30 ? "text-yellow-300 animate-pulse" : "text-white"
-            }`}
-          >
-            {formatTime(timer)}
-          </div>
-          <div className="w-full bg-black bg-opacity-30 rounded-full h-2 mt-2">
+      <div className="flex basis-1/4 flex-col p-4">
+        <div className="bg-white/40 h-full rounded-2xl p-4 aside-container flex flex-col">
+          {/* Temporizador destacado - Altura fija compacta */}
+          <div className="bg-gradient-to-r from-red-400 to-orange-400 p-3 rounded-lg text-center flex-shrink-0">
+            <h3 className="text-base font-bold mb-1">⏱️ Tiempo</h3>
             <div
-              className={`h-2 rounded-full transition-all duration-1000 ${
-                timer <= 30 ? "bg-yellow-400" : "bg-green-400"
+              className={`text-2xl font-mono font-bold ${
+                timer <= 30 ? "text-yellow-100 animate-pulse" : "text-white"
               }`}
-              style={{ width: `${(timer / 90) * 100}%` }}
-            ></div>
-          </div>
-        </div>
-
-        {/* Información del juego */}
-        <div className="bg-blue-900 bg-opacity-50 p-3 rounded-lg">
-          <h4 className="font-bold mb-2">📊 Estado del Juego</h4>
-          <p>Juego #{gameKey}</p>
-          <p>Pares encontrados: {matched.length}/9</p>
-          <p>
-            Estado:{" "}
-            {gameEnded
-              ? "Terminado"
-              : gameStarted
-              ? "En curso"
-              : "Iniciando..."}
-          </p>
-        </div>
-
-        {/* Información de debug */}
-        <div className="bg-gray-800 bg-opacity-50 p-3 rounded-lg text-sm">
-          <h4 className="font-bold mb-2">🔧 Debug</h4>
-          <p>En juego: {onPlay}</p>
-          <p>Card X: {selX?.id ?? "Not yet"}</p>
-          <p>Card Y: {selY?.id ?? "Not yet"}</p>
-          <p>Total cartas: {data.length}</p>
-        </div>
-
-        {/* Lista de cartas encontradas */}
-        {matched.length > 0 && (
-          <div className="bg-green-900 bg-opacity-50 p-3 rounded-lg">
-            <h4 className="font-bold mb-2">✅ Pares Encontrados</h4>
-            <div className="grid grid-cols-3 gap-1">
-              {matched.map((id) => (
-                <div
-                  key={id}
-                  className="bg-green-700 text-xs p-1 rounded text-center"
-                >
-                  {id}
-                </div>
-              ))}
+            >
+              {formatTime(timer)}
+            </div>
+            <div className="w-full bg-black bg-opacity-30 rounded-full h-1.5 mt-2">
+              <div
+                className={`h-1.5 rounded-full transition-all duration-1000 ${
+                  timer <= 30 ? "bg-yellow-400" : "bg-green-400"
+                }`}
+                style={{ width: `${(timer / 90) * 100}%` }}
+              ></div>
             </div>
           </div>
-        )}
+
+          {/* Información del juego - Altura fija compacta */}
+          <div className="text-black/80 mt-3 text-xl flex-shrink-0">
+            <p>Pares: {matched.length}/9</p>
+          </div>
+
+          {/* Contenedor de cartas matcheadas - Toma el espacio restante */}
+          <div className="match-container flex-1 flex flex-col mt-4">
+            <h4 className="font-bold mb-3 text-black/80 text-lg flex-shrink-0">
+              ✅ Pares Encontrados:
+            </h4>
+
+            {/* Grid 3x3 para mostrar los iconos de las cartas matcheadas */}
+            <div className="flex-1 bg-green-900/20 rounded-lg p-3 flex items-center justify-center">
+              <div className="grid grid-cols-3 grid-rows-3 gap-3 w-full h-full max-h-40">
+                {matched.map((item) => {
+                  const card = contein.find((c) => c.id === item);
+                  return (
+                    <div
+                      key={item}
+                      className="bg-white/30 rounded-lg flex items-center justify-center p-1 aspect-square w-full"
+                    >
+                      <img
+                        src={card?.src_solo}
+                        alt={card?.name}
+                        className="object-contain"
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Botones - Altura fija en la parte inferior */}
+          <div className="flex w-full gap-3 justify-center text-lg mt-4 flex-shrink-0">
+            <button
+              className="p-2 px-4 rounded-xl bg-[#7b704c] hover:bg-[#6b5f3c] transition-colors"
+              onClick={() => setContext("presentacion")}
+            >
+              Presentación
+            </button>
+            <button
+              className="p-2 px-4 rounded-xl bg-[#c6a778] hover:bg-[#b8956a] transition-colors"
+              onClick={() => setContext("menu")}
+            >
+              Menú
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

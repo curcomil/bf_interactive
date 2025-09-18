@@ -4,6 +4,7 @@ const contein = [
     id: 4821,
     src_papel: "/escudos_papel/escudo_1.png",
     src_juego: "/escudos_juego/escudo_1.png",
+    src_solo: "/escudos_solos/escudo_1.png",
     description:
       "Escudo partido. A la izquierda, cinco corazones (apellido Arana); a la derecha, león de sable coronado. Corresponde a un familiar del Santo Oficio y tesorero de los diezmos del mar para gastos secretos de la corona.",
   },
@@ -117,7 +118,7 @@ const contein = [
     src_papel: "/escudos_papel/escudo_15.png",
     src_juego: "/escudos_juego/escudo_15.png",
     description:
-      "Escudo coronado y cuartelado. Incluye armas de Castilla, León, Aragón, Dos Sicilias, Jerusalén, Borgoña, Brabante, Tirol y Flandes. Al centro, Toisón de Oro. Emblema de la monarquía hispánica."
+      "Escudo coronado y cuartelado. Incluye armas de Castilla, León, Aragón, Dos Sicilias, Jerusalén, Borgoña, Brabante, Tirol y Flandes. Al centro, Toisón de Oro. Emblema de la monarquía hispánica.",
   },
   {
     name: "Escudo franciscano",
