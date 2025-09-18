@@ -33,12 +33,9 @@ export const Card = ({
   // Limpiar timeouts al desmontar
   useEffect(() => {
     return () => {
-      if (animationTimeoutRef.current) {
+      if (animationTimeoutRef.current)
         clearTimeout(animationTimeoutRef.current);
-      }
-      if (reverseTimeoutRef.current) {
-        clearTimeout(reverseTimeoutRef.current);
-      }
+      if (reverseTimeoutRef.current) clearTimeout(reverseTimeoutRef.current);
     };
   }, []);
 
@@ -62,37 +59,30 @@ export const Card = ({
   // Reset cuando no hay cartas seleccionadas - Solo si esta carta estaba flipped
   useEffect(() => {
     if (onPlay === 0 && status === "flipped" && !matched.includes(id)) {
-      console.log(`🔄 Iniciando animación shake para carta ${id}`);
+      // Iniciar secuencia shake -> reversed -> closed
       setStatus("shake");
       setIsBlocked(true); // Bloquear durante toda la secuencia de animación
 
-      // Limpiar timeout anterior si existe
       if (animationTimeoutRef.current) {
         clearTimeout(animationTimeoutRef.current);
       }
 
-      // Iniciar secuencia shake -> reversed -> closed
       animationTimeoutRef.current = setTimeout(() => {
-        console.log(`🔄 Cambiando a reversed para carta ${id}`);
         setStatus("reversed");
 
-        // Timeout para volver a closed
         reverseTimeoutRef.current = setTimeout(() => {
-          console.log(`🔄 Cambiando a closed para carta ${id}`);
           setStatus("closed");
           setIsBlocked(false); // Liberar bloqueo al completar toda la secuencia
         }, 400); // duración animación reverse
       }, 1000); // duración del shake
     }
-  }, [onPlay, matched, id]);
+  }, [onPlay, matched, id, status]);
 
   // Cleanup de estados si la carta ya no está seleccionada y no está en matched
   useEffect(() => {
     if (onPlay === 0 && !matched.includes(id)) {
-      // Si por alguna razón el estado se queda inconsistente, resetear después de un tiempo
       const cleanupTimeout = setTimeout(() => {
         if (status !== "closed" && status !== "matched" && !isBlocked) {
-          console.log(`⚠️ Limpieza de estado inconsistente para carta ${id}`);
           setStatus("closed");
         }
       }, 2000);
@@ -121,15 +111,12 @@ export const Card = ({
   const background = (status) => {
     switch (status) {
       case "flipped":
-        return src;
       case "matched":
-        return src;
       case "shake":
-        return src;
+        return src; // frente
       case "reversed":
-        return "/tarjeta.png";
       default:
-        return "/tarjeta.png";
+        return "/tarjeta.png"; // trasera
     }
   };
 
@@ -145,7 +132,7 @@ export const Card = ({
 
   return (
     <div
-      className={`relative text-white bg-gray-700 w-[9.5vw] h-[13vw] mb-3 shadow-2xl border-[#c39952] border-4 rounded-xl select-none overflow-hidden ${flipClass} ${
+      className={`relative text-white w-[9.5vw] h-[13vw] mb-3 shadow-2xl border-[#c39952] border-4 rounded-xl select-none overflow-hidden ${flipClass} ${
         isBlocked
           ? "pointer-events-none opacity-90"
           : "cursor-pointer hover:scale-105"
@@ -154,10 +141,22 @@ export const Card = ({
       role="button"
       tabIndex={0}
     >
+      {/* Imagen visible (trasera o frontal según status) */}
       <img
         src={background(status)}
-        alt=""
+        alt={title || ""}
         className="absolute inset-0 w-full h-full object-fill"
+        decoding="async"
+      />
+
+      {/* Imagen invisible para FORZAR la precarga del frente */}
+      <img
+        src={src}
+        alt=""
+        style={{ display: "none" }}
+        aria-hidden="true"
+        decoding="async"
+        fetchpriority="low"
       />
     </div>
   );

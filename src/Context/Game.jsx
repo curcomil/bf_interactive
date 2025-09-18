@@ -50,6 +50,13 @@ function Game() {
 
   useEffect(() => {
     restartGame();
+    if (data.length > 0) {
+      // precargar imágenes de frente
+      data.forEach((card) => {
+        const img = new Image();
+        img.src = card.src_juego;
+      });
+    }
   }, []);
 
   // Efecto para manejar la inactividad del usuario
