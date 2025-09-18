@@ -159,10 +159,6 @@ export const Card = ({
         alt=""
         className="absolute inset-0 w-full h-full object-fill"
       />
-      <div className="absolute bottom-1 left-1 text-xs">
-        <p className="text-3xl">{title ?? "title"}</p>
-        <p>{id ?? "id"}</p>
-      </div>
     </div>
   );
 };

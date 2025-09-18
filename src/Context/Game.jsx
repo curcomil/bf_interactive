@@ -232,7 +232,7 @@ function Game() {
             setSelY={setSelY}
             title={card.name}
             matched={matched}
-            src={card.src}
+            src={card.src_juego}
           />
         ))}
       </div>
@@ -271,7 +271,7 @@ function Game() {
 
             {/* Grid 3x3 para mostrar los iconos de las cartas matcheadas */}
             <div className="flex-1 bg-green-900/20 rounded-lg p-3 flex items-center justify-center">
-              <div className="grid grid-cols-3 grid-rows-3 gap-3 w-full h-full max-h-40">
+              <div className="grid grid-cols-3 grid-rows-3 gap-3 w-full h-full">
                 {matched.map((item) => {
                   const card = contein.find((c) => c.id === item);
                   return (
