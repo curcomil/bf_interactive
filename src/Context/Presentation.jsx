@@ -51,7 +51,7 @@ function Presentacion() {
       <div className="flex flex-col items-center justify-between h-full">
         <p className="title text-[4vw] text-center">{selection.name}</p>
         <div className="p-10 mt-3 bg-gray-300 rounded-xl w-full text-3xl text-black/80">
-          <p>
+          <p className="text-justify">
             {selection.description ??
               "Lorem ipsum dolor sit amet, consectetur adipisicing elit."}
           </p>
