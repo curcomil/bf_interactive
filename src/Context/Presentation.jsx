@@ -57,9 +57,9 @@ function Presentacion() {
           </p>
         </div>
         <div className="w-full">
-          <div className="flex gap-15 mt-6 justify-center">
+          <div className="flex mt-6 justify-center">
             <button
-              className="px-4 py-2 aspect-square w-[8vw] bg-gray-300 rounded"
+              className="px-4 py-2 mr-10 aspect-square w-[8vw] bg-gray-300 rounded"
               onClick={() => setIndex("decrease")}
             >
               <img src="/left-arrow.png" alt="" className="opacity-80" />

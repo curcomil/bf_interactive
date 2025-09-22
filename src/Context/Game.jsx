@@ -299,7 +299,7 @@ function Game() {
           </div>
 
           {/* Botones - Altura fija en la parte inferior */}
-          <div className="flex w-full gap-3 justify-center text-lg mt-4 flex-shrink-0">
+          <div className="flex w-full gap-3 justify-center text-2xl mt-4 flex-shrink-0">
             <button
               className="p-2 px-4 rounded-xl bg-[#7b704c] hover:bg-[#6b5f3c] transition-colors"
               onClick={() => setContext("presentacion")}
