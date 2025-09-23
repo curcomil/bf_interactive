@@ -34,9 +34,9 @@ function Menu() {
           <p className="text-[2vw]">Exposición</p>
           <div className="flex w-full items-baseline justify-center ">
             <p className="text-[3vw]">Emblemas</p>
-            <span className="text-[2vw] ml-3 font-light">del</span>
           </div>
-          <div className="flex text-[3vw] font-bold justify-center items-center-safe">
+          <div className="flex text-[3vw] font-bold justify-center items-center">
+            <span className="text-[2vw] mr-3 font-light">del</span>
             <p>PODER</p>
             <span className="font-light text-[2vw] mx-3">y la</span>
             <p>FE:</p>
